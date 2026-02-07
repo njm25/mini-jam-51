@@ -8,7 +8,7 @@ public partial class StartMenu : Control
 	public override void _Ready()
 	{
 		base._Ready();
-		_gameManager = GetParent<CanvasLayer>().GetParent<GameManager>();
+		_gameManager = GetParent<CanvasLayer>().GetParent<MenuManager>().GetParent<GameManager>();
 		VBoxContainer container = GetNode<VBoxContainer>("VBoxContainer");
 		_startButton = container.GetNode<Button>("StartButton");
 		_startButton.Pressed += OnStartButtonPressed;

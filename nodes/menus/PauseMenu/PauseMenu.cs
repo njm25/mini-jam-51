@@ -3,9 +3,11 @@ using System;
 
 public partial class PauseMenu : Control
 {
+	private GameManager _gameManager;
 	public override void _Ready()
 	{
 		base._Ready();
+		_gameManager = GetParent<CanvasLayer>().GetParent<MenuManager>().GetParent<GameManager>();
 		VBoxContainer container = GetNode<VBoxContainer>("VBoxContainer");
 		Button resumeButton = container.GetNode<Button>("ResumeButton");    
 		resumeButton.Pressed += OnResumeButtonPressed;
@@ -15,7 +17,6 @@ public partial class PauseMenu : Control
 	}
 	private void OnResumeButtonPressed()
 	{
-		var _gameManager = GetParent<CanvasLayer>().GetParent<GameManager>();
 		_gameManager.PauseGame();
 	}
 

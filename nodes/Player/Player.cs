@@ -10,6 +10,8 @@ public partial class Player : RigidBody2D
 	[Export]
 	public int JumpPower { get; set; } = 30;
 
+	#region Lifecycle
+	
 	public override void _Ready()
 	{
 		base._Ready();
@@ -54,5 +56,8 @@ public partial class Player : RigidBody2D
 		GameManager gameManager = GetParent<GameManager>();
 		gameManager.EndGame();
 	}
+
+
+	#endregion
 
 }

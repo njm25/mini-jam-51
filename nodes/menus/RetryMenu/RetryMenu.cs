@@ -7,7 +7,7 @@ public partial class RetryMenu : Control
 	public override void _Ready()
 	{
 		base._Ready();
-		_gameManager = GetParent<CanvasLayer>().GetParent<GameManager>();
+		_gameManager = GetParent<CanvasLayer>().GetParent<MenuManager>().GetParent<GameManager>();
 		VBoxContainer container = GetNode<VBoxContainer>("VBoxContainer");
 		Button retryButton = container.GetNode<Button>("RetryButton");
 		retryButton.Pressed += OnRetryButtonPressed;
