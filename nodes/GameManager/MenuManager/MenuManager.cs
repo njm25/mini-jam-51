@@ -14,7 +14,6 @@ public partial class MenuManager : Node
 	const string RETRY_MENU_PATH = "res://nodes/menus/RetryMenu/RetryMenu.tscn";
 	const string PAUSE_MENU_PATH = "res://nodes/menus/PauseMenu/PauseMenu.tscn";
 
-
     #region Lifecycle
 
     public override void _Ready()
@@ -24,8 +23,6 @@ public partial class MenuManager : Node
 
         LoadCanvasLayer();
         LoadMenus();
-
-        GD.Print("MenuManager is ready.");
     }
 
     #endregion
@@ -75,10 +72,7 @@ public partial class MenuManager : Node
     public void Back()
     {
         if (_menuStack.Count == 0)
-        {
-            GD.PrintErr("Attempted to close a menu that is not on top of the stack.");
             return;
-        }
         _menuStack.Peek().Visible = false;
         _menuStack.Pop();
         if (_menuStack.Count > 0)
@@ -90,10 +84,7 @@ public partial class MenuManager : Node
     public void Close()
     {
         if (_menuStack.Count == 0)
-        {
-            GD.PrintErr("Attempted to close a menu that is not on top of the stack.");
             return;
-        }
         for (int i = 0; i < _menuStack.Count; i++) {
             _menuStack.Peek().Visible = false;
             _menuStack.Pop();

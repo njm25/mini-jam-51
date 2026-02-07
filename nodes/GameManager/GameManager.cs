@@ -9,6 +9,7 @@ public partial class GameManager : Node2D
 	private Player _player;
 	private Camera _camera;
 	public MenuManager _menuManager;
+	public ObstacleManager _obstacleManager;
 	const string PLAYER_PATH = "res://nodes/Player/Player.tscn";
 	const string CAMERA_PATH = "res://nodes/Camera/Camera.tscn";
 
@@ -64,6 +65,22 @@ public partial class GameManager : Node2D
 		}
 	}
 
+	private void LoadObstacleManager()
+	{
+		ObstacleManager obstacleManager = new ObstacleManager();
+		_obstacleManager = obstacleManager;
+		AddChild(_obstacleManager);
+	}
+
+	private void UnloadObstacleManager()
+	{
+		if (_obstacleManager != null)
+		{
+			_obstacleManager.QueueFree();
+			_obstacleManager = null;
+		}
+	}	
+
 	#endregion
 
 	#region Game Logic
@@ -75,6 +92,7 @@ public partial class GameManager : Node2D
 
 		UnloadCamera();
 		UnloadPlayer();
+		UnloadObstacleManager();
 	}
 
 	public void StartGame()
@@ -84,6 +102,7 @@ public partial class GameManager : Node2D
 		
 		LoadPlayer();
 		LoadCamera();
+		LoadObstacleManager();
 	}
 
 	public void PauseGame()
@@ -93,7 +112,8 @@ public partial class GameManager : Node2D
 			: GameState.Paused;
 
 		_player.IsPaused = GameState == GameState.Paused;
-
+		_obstacleManager.PauseObstacles();
+		
 		if (GameState == GameState.Paused)
 			_menuManager.Navigate(_menuManager._pauseMenu);
 		else
