@@ -1,0 +1,23 @@
+[gd_scene load_steps=2 format=3 uid="uid://b0wxi63e8p0aj"]
+
+[ext_resource type="Script" uid="uid://fxs3tqbbty7e" path="res://nodes/menus/PauseMenu/PauseMenu.cs" id="1_y15r6"]
+
+[node name="PauseMenu" type="Control"]
+layout_mode = 3
+anchors_preset = 0
+script = ExtResource("1_y15r6")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+layout_mode = 0
+offset_left = 229.0
+offset_top = 151.0
+offset_right = 325.0
+offset_bottom = 191.0
+
+[node name="ResumeButton" type="Button" parent="VBoxContainer"]
+layout_mode = 2
+text = "Resume Game"
+
+[node name="QuitButton" type="Button" parent="VBoxContainer"]
+layout_mode = 2
+text = "Quit"
