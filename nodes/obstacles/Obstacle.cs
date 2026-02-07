@@ -8,17 +8,24 @@ public partial class Obstacle : RigidBody2D
 	[Export]
 	public float Speed { get; set; } = 200;
 	[Export]
-	public Vector2 SpawnPosition { get; set; } = new Vector2(800, 0);
+	public bool DoesDamage { get; set; } = true;
 	private CollisionShape2D _collisionShape;
+	public ObstacleManager _obstacleManager;
+	private Timer _destroyTimer;
 
 	public override void _Ready()
 	{
 		base._Ready();
-		Position = SpawnPosition;
+		_obstacleManager = GetParent<ObstacleManager>();
 		_collisionShape = GetNode<CollisionShape2D>("CollisionShape2D");
 		GravityScale = 0; 
 		AddToGroup("Obstacles");
-		GD.Print("Obstacle ready at position: " + Position);
+		_destroyTimer = new Timer();
+		_destroyTimer.WaitTime = 10f;
+		_destroyTimer.OneShot = true;
+		_destroyTimer.Timeout += Destroy;
+		AddChild(_destroyTimer);
+		_destroyTimer.Start();
 	}
 
 	public override void _PhysicsProcess(double delta)
@@ -40,5 +47,29 @@ public partial class Obstacle : RigidBody2D
 		IsPaused = Freeze;
 	}
 
+	public virtual void Interact()
+	{
+		if (DoesDamage)
+		{
+			Player player = _obstacleManager._gameManager._player;
+			player.Health--;
+			if (player.Health <= 0)
+			{
+				player.KillPlayer();
+			}
+		}
+	}
+
+	public void Act()
+	{   
+		Interact();
+		Destroy();
+	}
+
+	private void Destroy()
+	{
+		QueueFree();
+		GD.Print("Destroyed obstacle");
+	}
 
 }

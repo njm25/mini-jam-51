@@ -1,0 +1,16 @@
+[gd_scene load_steps=2 format=3 uid="uid://2uhkhsi8ln21"]
+
+[ext_resource type="Script" uid="uid://ghdsxi2kkvle" path="res://nodes/Player/PlayerHud/PlayerHud.cs" id="1_8mdk2"]
+
+[node name="PlayerHud" type="Control"]
+layout_mode = 3
+anchors_preset = 0
+script = ExtResource("1_8mdk2")
+
+[node name="HealthLabel" type="Label" parent="."]
+layout_mode = 0
+offset_left = 816.0
+offset_top = 86.0
+offset_right = 856.0
+offset_bottom = 109.0
+text = "3"

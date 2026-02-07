@@ -1,5 +1,6 @@
 using Godot;
 using System;
+using System.Diagnostics;
 
 public partial class Player : CharacterBody2D
 {
@@ -15,9 +16,15 @@ public partial class Player : CharacterBody2D
 
 	[Export]
 	public int Health { get; set; } = 3;
+	[Export]
+	public int MaxHealth { get; set; } = 3;
 	private GameManager _gameManager;
 	private CollisionShape2D _collisionShape;
 	private Area2D _area2D;
+	private PlayerHud _hud;
+	public Stopwatch _scoreStopwatch = new Stopwatch();
+	public int Score => (int)(_scoreStopwatch.Elapsed.TotalSeconds / 3);
+	private const string HUD_PATH = "res://nodes/Player/PlayerHud/PlayerHud.tscn";
 
 	#region Lifecycle
 
@@ -28,25 +35,25 @@ public partial class Player : CharacterBody2D
 		_collisionShape = GetNode<CollisionShape2D>("CollisionShape2D");
 		_area2D = GetNode<Area2D>("Area2D");
 		_area2D.BodyEntered += BodyEntered;
+		_scoreStopwatch.Start();
+		LoadHud();
 	}
-
+	
 	public override void _Process(double delta)
 	{
 		base._Process(delta);
-		// to-do figure out how to do freeze now that were not using rigidybody2d
-		// Freeze = IsPaused;
 
 		if (Input.IsActionJustPressed("ui_cancel"))
 		{
 			HandlePauseInput();
 		}
 
+		if (IsPaused) return;
+
 		if (Input.IsActionJustPressed("kill"))
 		{
 			KillPlayer();
 		}
-
-		if (IsPaused) return;
 	}
 
 	private void HandlePauseInput()
@@ -77,12 +84,7 @@ public partial class Player : CharacterBody2D
 		if (body.IsInGroup("Obstacles"))
 		{
 			Obstacle obstacle = body as Obstacle;
-			_gameManager._obstacleManager.RemoveObstacle(obstacle);
-			Health--;
-			if (Health <= 0)
-			{
-				KillPlayer();
-			}
+			_gameManager._obstacleManager.ActObstacle(obstacle);
 		}
 	}
 
@@ -91,6 +93,19 @@ public partial class Player : CharacterBody2D
 		_gameManager.EndGame();
 	}
 
+	#endregion
+
+	#region Loading/Unloading
+
+	private void LoadHud()
+	{
+		var hudScene = GD.Load<PackedScene>(HUD_PATH);
+		_hud = hudScene.Instantiate<PlayerHud>();
+		
+		CanvasLayer canvasLayer = new CanvasLayer();
+		AddChild(canvasLayer);
+		canvasLayer.AddChild(_hud);
+	}
 
 	#endregion
 

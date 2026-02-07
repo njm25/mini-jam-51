@@ -4,6 +4,8 @@
 size = Vector2(2283, 416)
 
 [node name="Ground" type="StaticBody2D"]
+collision_layer = 2
+collision_mask = 2
 
 [node name="ColorRect" type="ColorRect" parent="."]
 offset_left = -1068.0
@@ -13,7 +15,7 @@ offset_bottom = 589.0
 color = Color(1.6364455e-06, 0.52804846, 0.79569, 1)
 
 [node name="CollisionShape2D2" type="CollisionShape2D" parent="."]
-position = Vector2(123, -715)
+position = Vector2(110, -655)
 shape = SubResource("RectangleShape2D_wk415")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
