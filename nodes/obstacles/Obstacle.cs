@@ -47,6 +47,12 @@ public partial class Obstacle : RigidBody2D
 		IsPaused = Freeze;
 	}
 
+	public void Act()
+	{   
+		Interact();
+		Destroy();
+	}
+
 	public virtual void Interact()
 	{
 		if (DoesDamage)
@@ -58,12 +64,6 @@ public partial class Obstacle : RigidBody2D
 				player.KillPlayer();
 			}
 		}
-	}
-
-	public void Act()
-	{   
-		Interact();
-		Destroy();
 	}
 
 	private void Destroy()
