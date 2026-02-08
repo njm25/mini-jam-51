@@ -105,8 +105,14 @@ public partial class GameManager : Node2D
 	public void EndGame(string reason = "Game Over")
 	{
 		GameState = GameState.GameOver;
+
+		// Extract score before the player is freed
+		int finalScore = _player?.Score ?? 0;
+		bool isNewHighScore = HighScoreManager.TrySetHighScore(finalScore);
+
 		_menuManager.Close();
 		_menuManager._retryMenu._deathReason.Text = reason;
+		_menuManager._retryMenu.ShowScore(finalScore, HighScoreManager.HighScore, isNewHighScore);
 		_menuManager.Navigate(_menuManager._retryMenu);
 
 		UnloadCamera();
@@ -139,11 +145,13 @@ public partial class GameManager : Node2D
 		{
 			_menuManager.Navigate(_menuManager._pauseMenu);
 			_player._scoreStopwatch.Stop();
+			_player.SetMusicMuted(true);
 		}
 		else
 		{
 			_menuManager.Close();
 			_player._scoreStopwatch.Start();
+			_player.SetMusicMuted(false);
 		}
 			
 	}

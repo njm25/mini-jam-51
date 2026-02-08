@@ -52,6 +52,8 @@ public partial class Player : CharacterBody2D
 	private AnimatedSprite2D _iFrameSprite;
 	private AudioStreamPlayer _breathingPlayer;
 	private AudioStreamPlayer _splashPlayer;
+	private AudioStreamPlayer _musicPlayer;
+	private AudioStream _runningLoop;
 	private bool _wasUnderwater = true;
 	public int Score => (int)(_scoreStopwatch.Elapsed.TotalSeconds / 3);
 	private const string HUD_PATH = "res://nodes/Player/PlayerHud/PlayerHud.tscn";
@@ -83,7 +85,9 @@ public partial class Player : CharacterBody2D
 		_splashPlayer.Stream = GD.Load<AudioStream>("res://assets/splash.mp3");
 		_splashPlayer.VolumeDb = -10f;
 		AddChild(_splashPlayer);
+		LoadMusic();
 		LoadHud();
+		ShowTutorialLabels();
 	}
 	
 	public override void _Process(double delta)
@@ -224,9 +228,9 @@ public partial class Player : CharacterBody2D
 	{
 		string reason = damageType switch
 		{
-			DamageType.Obstacle => "Killed by Obstacle",
-			DamageType.AirLevel => "Drowned",
-			DamageType.Suicide => "Committed Suicide",
+			DamageType.Obstacle => "Watch out for those mines!",
+			DamageType.AirLevel => "You drowned my guy!",
+			DamageType.Suicide => "You found a secret suicide key! Whoops!",
 			_ => throw new NotImplementedException(),
 		};
 		
@@ -237,6 +241,30 @@ public partial class Player : CharacterBody2D
 
 	#region Loading/Unloading
 
+	private void LoadMusic()
+	{
+		_runningLoop = GD.Load<AudioStream>("res://assets/running.wav");
+		_musicPlayer = new AudioStreamPlayer();
+		_musicPlayer.Stream = GD.Load<AudioStream>("res://assets/runningintro.wav");
+		_musicPlayer.Finished += OnIntroFinished;
+		AddChild(_musicPlayer);
+		_musicPlayer.Play();
+	}
+
+	private void OnIntroFinished()
+	{
+		_musicPlayer.Finished -= OnIntroFinished;
+		_musicPlayer.Stream = _runningLoop;
+		_musicPlayer.Finished += () => _musicPlayer.Play();
+		_musicPlayer.Play();
+	}
+
+	public void SetMusicMuted(bool muted)
+	{
+		if (_musicPlayer != null)
+			_musicPlayer.VolumeDb = muted ? -80f : 0f;
+	}
+
 	private void LoadHud()
 	{
 		var hudScene = GD.Load<PackedScene>(HUD_PATH);
@@ -245,6 +273,42 @@ public partial class Player : CharacterBody2D
 		CanvasLayer canvasLayer = new CanvasLayer();
 		AddChild(canvasLayer);
 		canvasLayer.AddChild(_hud);
+	}
+
+	private void ShowTutorialLabels()
+	{
+		var font = GD.Load<Font>("res://assets/mspain.ttf");
+		var viewport = GetViewportRect().Size;
+
+		var swimLabel = new Label();
+		swimLabel.Text = "Press Space to swim up";
+		swimLabel.HorizontalAlignment = HorizontalAlignment.Center;
+		swimLabel.AddThemeColorOverride("font_color", Colors.Black);
+		swimLabel.AddThemeFontSizeOverride("font_size", 24);
+		if (font != null) swimLabel.AddThemeFontOverride("font", font);
+		swimLabel.Position = new Vector2(viewport.X / 2 - 150, viewport.Y / 2 - 40);
+		swimLabel.Size = new Vector2(300, 40);
+
+		var speakerLabel = new Label();
+		speakerLabel.Text = "Press E to use speaker";
+		speakerLabel.HorizontalAlignment = HorizontalAlignment.Center;
+		speakerLabel.AddThemeColorOverride("font_color", Colors.Black);
+		speakerLabel.AddThemeFontSizeOverride("font_size", 24);
+		if (font != null) speakerLabel.AddThemeFontOverride("font", font);
+		speakerLabel.Position = new Vector2(viewport.X / 2 - 150, viewport.Y / 2 + 10);
+		speakerLabel.Size = new Vector2(300, 40);
+
+		CanvasLayer tutorialLayer = new CanvasLayer();
+		tutorialLayer.AddChild(swimLabel);
+		tutorialLayer.AddChild(speakerLabel);
+		AddChild(tutorialLayer);
+
+		Timer timer = new Timer();
+		timer.WaitTime = 3.0f;
+		timer.OneShot = true;
+		timer.Timeout += () => tutorialLayer.QueueFree();
+		AddChild(timer);
+		timer.Start();
 	}
 
 	#endregion
