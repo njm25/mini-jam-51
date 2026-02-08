@@ -16,8 +16,8 @@ public partial class ObstacleManager : Node
 	public float CeilingOffset = 200f;
 	[Export]
 	public float FloorOffset = 20f;
-    [Export]
-    public float SpawnX = 1000f;
+	[Export]
+	public float SpawnX = 1000f;
 
 	// Difficulty scaling
 	[Export]
