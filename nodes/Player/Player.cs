@@ -79,11 +79,13 @@ public partial class Player : CharacterBody2D
 		_iFrameTimer.WaitTime = IFrameDuration;
 		_iFrameTimer.Timeout += () => IFrameOver();
 		_breathingPlayer = new AudioStreamPlayer();
+		_breathingPlayer.VolumeDb = 6f;
 		_breathingPlayer.Stream = GD.Load<AudioStream>("res://assets/breathing.wav");
 		AddChild(_breathingPlayer);
 		_splashPlayer = new AudioStreamPlayer();
 		_splashPlayer.Stream = GD.Load<AudioStream>("res://assets/splash.mp3");
 		_splashPlayer.VolumeDb = -10f;
+		_splashPlayer.MaxPolyphony = 3;
 		AddChild(_splashPlayer);
 		LoadMusic();
 		LoadHud();
@@ -145,6 +147,7 @@ public partial class Player : CharacterBody2D
 		{
 			if (_wasUnderwater)
 			{
+				_splashPlayer.Play();
 				_breathingPlayer.Play();
 				_wasUnderwater = false;
 			}
@@ -245,6 +248,7 @@ public partial class Player : CharacterBody2D
 	{
 		_runningLoop = GD.Load<AudioStream>("res://assets/running.wav");
 		_musicPlayer = new AudioStreamPlayer();
+		_musicPlayer.VolumeDb = -7f;
 		_musicPlayer.Stream = GD.Load<AudioStream>("res://assets/runningintro.wav");
 		_musicPlayer.Finished += OnIntroFinished;
 		AddChild(_musicPlayer);
@@ -262,7 +266,7 @@ public partial class Player : CharacterBody2D
 	public void SetMusicMuted(bool muted)
 	{
 		if (_musicPlayer != null)
-			_musicPlayer.VolumeDb = muted ? -80f : 0f;
+			_musicPlayer.VolumeDb = muted ? -80f : -7f;
 	}
 
 	private void LoadHud()

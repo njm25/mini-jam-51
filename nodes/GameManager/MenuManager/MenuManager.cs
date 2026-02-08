@@ -64,6 +64,7 @@ public partial class MenuManager : Node
         var stream = GD.Load<AudioStream>(MENU_MUSIC_PATH);
         _menuMusicPlayer.Stream = stream;
         _menuMusicPlayer.Autoplay = false;
+        _menuMusicPlayer.VolumeDb = -5f;
         AddChild(_menuMusicPlayer);
         _menuMusicPlayer.Finished += () => _menuMusicPlayer.Play();
     }

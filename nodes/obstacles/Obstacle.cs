@@ -17,6 +17,8 @@ public partial class Obstacle : RigidBody2D
 	public float BobAmount { get; set; } = 10f;
 	[Export]
 	public string DestroyLabelText { get; set; }
+	[Export]
+	public float DestroyDb { get; set; } = 4f;
 	private CollisionShape2D _collisionShape;
 	public ObstacleManager _obstacleManager;
 	private Timer _destroyTimer;
@@ -45,6 +47,7 @@ public partial class Obstacle : RigidBody2D
 		base._PhysicsProcess(delta);
 		if (IsPaused) return;
 		ApplySpeed(delta);
+		ClampToWaterLine();
 	}
 
 	private void ApplySpeed(double delta)
@@ -58,6 +61,17 @@ public partial class Obstacle : RigidBody2D
 
 		Vector2 velocity = new Vector2(-Speed, bobVelocityY);
 		LinearVelocity = velocity;
+	}
+
+	private void ClampToWaterLine()
+	{
+		float waterLineY = -(GetViewportRect().Size.Y - 200f);
+		if (Position.Y < waterLineY)
+		{
+			Position = new Vector2(Position.X, waterLineY);
+			if (LinearVelocity.Y < 0)
+				LinearVelocity = new Vector2(LinearVelocity.X, 0);
+		}
 	}
 
 	public void Pause()
@@ -92,6 +106,7 @@ public partial class Obstacle : RigidBody2D
 			GetTree().Root.AddChild(destroySoundPlayer);
 			destroySoundPlayer.Stream = GD.Load<AudioStream>(DESTROY_SOUND_PATH);
 			destroySoundPlayer.GlobalPosition = GlobalPosition;
+			destroySoundPlayer.VolumeDb = DestroyDb;
 			destroySoundPlayer.Play();
 			destroySoundPlayer.Finished += () => destroySoundPlayer.QueueFree();
 		}
