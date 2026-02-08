@@ -1,18 +1,18 @@
 [gd_scene load_steps=4 format=3 uid="uid://d0umbcju6sbkq"]
 
 [ext_resource type="Script" uid="uid://vfedg8c4d50f" path="res://nodes/obstacles/powerUps/AirBubblePowerUp/AirBubblePowerUp.cs" id="1_xwpgc"]
-[ext_resource type="Texture2D" uid="uid://bmqs5feffciri" path="res://assets/icon.svg" id="2_hnjo4"]
+[ext_resource type="Texture2D" uid="uid://fju3olaekkkp" path="res://assets/bubble.png" id="2_xwpgc"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_2jqm7"]
-radius = 47.010635
+radius = 53.009434
 
 [node name="PowerUp" type="RigidBody2D"]
 script = ExtResource("1_xwpgc")
 
-[node name="Icon" type="Sprite2D" parent="."]
-modulate = Color(0, 0.7176471, 0.65882355, 0.5764706)
-scale = Vector2(0.546875, 0.546875)
-texture = ExtResource("2_hnjo4")
+[node name="Bubble" type="Sprite2D" parent="."]
+position = Vector2(0, -9.536743e-07)
+scale = Vector2(0.75, 0.75)
+texture = ExtResource("2_xwpgc")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource("CircleShape2D_2jqm7")

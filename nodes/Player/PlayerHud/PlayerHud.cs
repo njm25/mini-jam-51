@@ -6,6 +6,7 @@ public partial class PlayerHud : Node
 	public Player _player;
 	public Label _label;
 	private ColorRect _waterLine;
+	private ColorRect _zeroLine;
 
 	public override void _Ready()
 	{
@@ -17,8 +18,13 @@ public partial class PlayerHud : Node
 		_waterLine.Color = new Color(0, 0.5f, 1, 0.5f);
 		_waterLine.Size = new Vector2(GetViewport().GetVisibleRect().Size.X, 2);
 		AddChild(_waterLine);
-	}
 
+		_zeroLine = new ColorRect();
+		_zeroLine.Color = new Color(1, 0, 0, 0.5f);
+		_zeroLine.Size = new Vector2(GetViewport().GetVisibleRect().Size.X, 2);
+		AddChild(_zeroLine);
+	}
+ 
 	public override void _Process(double delta)
 	{
 		base._Process(delta);
@@ -28,6 +34,12 @@ public partial class PlayerHud : Node
 		Vector2 screenPos = _player.GetCanvasTransform() * waterWorldPos;
 		_waterLine.Position = new Vector2(0, screenPos.Y);
 		_waterLine.Size = new Vector2(GetViewport().GetVisibleRect().Size.X, 2);
+
+		// Update Y=0 line screen position
+		Vector2 zeroWorldPos = new Vector2(0, 0);
+		Vector2 zeroScreenPos = _player.GetCanvasTransform() * zeroWorldPos;
+		_zeroLine.Position = new Vector2(0, zeroScreenPos.Y);
+		_zeroLine.Size = new Vector2(GetViewport().GetVisibleRect().Size.X, 2);
 
 		_label.Text = "Lives left: " + _player.Health.ToString()  + "/" + _player.MaxHealth.ToString()
 		+ "\nScore: " + _player.Score.ToString() 

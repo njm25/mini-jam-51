@@ -1,18 +1,18 @@
 [gd_scene load_steps=4 format=3 uid="uid://dy45ikdp7cauj"]
 
 [ext_resource type="Script" uid="uid://bficyk6m5qd2n" path="res://nodes/obstacles/powerUps/HealthPowerUp/HealthPowerUp.cs" id="1_parvf"]
-[ext_resource type="Texture2D" uid="uid://bmqs5feffciri" path="res://assets/icon.svg" id="2_wrwbp"]
+[ext_resource type="Texture2D" uid="uid://71i5s1jsn3hx" path="res://assets/shrimp.png" id="2_in0gx"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_2jqm7"]
-radius = 8.0
+radius = 13.0
 
 [node name="PowerUp" type="RigidBody2D"]
 script = ExtResource("1_parvf")
 
-[node name="Icon" type="Sprite2D" parent="."]
-modulate = Color(0.5144888, 0.99999994, 0.14415228, 1)
-scale = Vector2(0.07812503, 0.07812503)
-texture = ExtResource("2_wrwbp")
+[node name="Shrimp" type="Sprite2D" parent="."]
+position = Vector2(-1, 0)
+scale = Vector2(0.75, 0.75)
+texture = ExtResource("2_in0gx")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource("CircleShape2D_2jqm7")

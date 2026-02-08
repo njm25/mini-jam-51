@@ -9,6 +9,7 @@ public partial class PowerUp : Obstacle
 		base._Ready();
 		DoesDamage = false;
 		BypassIFrame = true;
+		BobUpAndDown = true;
 	}
 
 

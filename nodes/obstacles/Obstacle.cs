@@ -11,9 +11,14 @@ public partial class Obstacle : RigidBody2D
 	public bool DoesDamage { get; set; } = true;
 	[Export]
 	public bool BypassIFrame { get; set; } = false;
+	[Export]
+	public bool BobUpAndDown { get; set; } = false;
+	[Export]
+	public float BobAmount { get; set; } = 10f;
 	private CollisionShape2D _collisionShape;
 	public ObstacleManager _obstacleManager;
 	private Timer _destroyTimer;
+	private float _bobTime = 0f;
 
 	public override void _Ready()
 	{
@@ -41,7 +46,14 @@ public partial class Obstacle : RigidBody2D
 
 	private void ApplySpeed(double delta)
 	{
-		Vector2 velocity = new Vector2(-Speed, 0);
+		float bobVelocityY = 0f;
+		if (BobUpAndDown)
+		{
+			_bobTime += (float)delta;
+			bobVelocityY = Mathf.Sin(_bobTime * Mathf.Pi * 2f) * BobAmount;
+		}
+
+		Vector2 velocity = new Vector2(-Speed, bobVelocityY);
 		LinearVelocity = velocity;
 	}
 
