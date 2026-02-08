@@ -71,8 +71,6 @@ public partial class Obstacle : RigidBody2D
 		QueueFree();
 		if (_obstacleManager._obstacles.Contains(this))
 			_obstacleManager._obstacles.Remove(this);
-
-		GD.Print("Destroyed obstacle");
 	}
 
 }

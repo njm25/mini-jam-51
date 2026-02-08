@@ -1,0 +1,19 @@
+[gd_scene load_steps=4 format=3 uid="uid://b6wspov66id0b"]
+
+[ext_resource type="Script" uid="uid://c642lorrb56gr" path="res://nodes/obstacles/powerUps/MaxHealthPowerUp/MaxHealthPowerUp.cs" id="1_87xdg"]
+[ext_resource type="Texture2D" uid="uid://bmqs5feffciri" path="res://assets/icon.svg" id="2_yi18b"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_2jqm7"]
+radius = 14.0
+
+[node name="PowerUp" type="RigidBody2D"]
+script = ExtResource("1_87xdg")
+
+[node name="Icon" type="Sprite2D" parent="."]
+modulate = Color(0, 0.5438396, 0.93279034, 1)
+position = Vector2(4.7683716e-07, 4.7683716e-07)
+scale = Vector2(0.15625001, 0.15625001)
+texture = ExtResource("2_yi18b")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_2jqm7")

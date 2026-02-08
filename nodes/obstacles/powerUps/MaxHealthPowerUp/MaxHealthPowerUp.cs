@@ -1,7 +1,7 @@
 using Godot;
 using System;
 
-public partial class HealthPowerUp : PowerUp
+public partial class MaxHealthPowerUp : PowerUp
 {
 	public override void _Ready()
 	{
@@ -11,8 +11,7 @@ public partial class HealthPowerUp : PowerUp
 	public override void Interact()
 	{
 		Player player = _obstacleManager._gameManager._player;
-		if (player.Health < player.MaxHealth)
-			player.Health++;
+		player.MaxHealth++;
 	}
 
 }

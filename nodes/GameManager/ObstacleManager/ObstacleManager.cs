@@ -16,6 +16,8 @@ public partial class ObstacleManager : Node
 	public float CeilingOffset = 200f;
 	[Export]
 	public float FloorOffset = 20f;
+    [Export]
+    public float SpawnX = 1000f;
 
 	// Difficulty scaling
 	[Export]
@@ -31,6 +33,7 @@ public partial class ObstacleManager : Node
 	public List<Obstacle> _obstacles = new List<Obstacle>();
 	private const string MINE_OBSTACLE_PATH = "res://nodes/obstacles/MineObstacle/MineObstacle.tscn";
 	private const string HEALTH_POWERUP_PATH = "res://nodes/obstacles/powerUps/HealthPowerUp/HealthPowerUp.tscn";
+	private const string MAX_HEALTH_POWERUP_PATH = "res://nodes/obstacles/powerUps/MaxHealthPowerUp/MaxHealthPowerUp.tscn";
 	public GameManager _gameManager;
 
 	private Timer _spawnTimer;
@@ -124,7 +127,6 @@ public partial class ObstacleManager : Node
 		_currentMode = SpawnMode.Standard;
 		_spawnTimer.WaitTime = SpawnInterval;
 		_patternStep = 0;
-		GD.Print("Mode: Standard");
 	}
 
 	private void EnterRandomMode()
@@ -136,13 +138,11 @@ public partial class ObstacleManager : Node
 			_currentMode = SpawnMode.Confine;
 			var modes = Enum.GetValues(typeof(ConfineMode));
 			_currentConfineMode = (ConfineMode)modes.GetValue((int)(GD.Randi() % modes.Length));
-			GD.Print($"Mode: Confine ({_currentConfineMode})");
 		}
 		else
 		{
 			_currentMode = SpawnMode.Pattern;
 			_currentPatternMode = PatternMode.Stairs;
-			GD.Print($"Mode: Pattern ({_currentPatternMode})");
 		}
 
 		_spawnTimer.WaitTime = PatternSpawnInterval;
@@ -188,7 +188,11 @@ public partial class ObstacleManager : Node
 	{
 		if (GD.Randf() < 0.03f)
 		{
-			SpawnObstacle(ObstacleType.HealthPowerUp, SpawnType.Random);
+			if (GD.Randf() < 0.5f)
+				SpawnObstacle(ObstacleType.HealthPowerUp, SpawnType.Random);
+			else
+				SpawnObstacle(ObstacleType.MaxHealthPowerUp, SpawnType.Random);
+
 			return;
 		}
 
@@ -205,7 +209,7 @@ public partial class ObstacleManager : Node
 		float y = CalculatePatternY(_currentPatternMode, _patternStep);
 		_patternStep++;
 		if (float.IsNaN(y)) return; // gap tick, skip spawn
-		SpawnObstacleAtPosition(ObstacleType.Mine, new Vector2(800, y));
+		SpawnObstacleAtPosition(ObstacleType.Mine, new Vector2(SpawnX, y));
 	}
 
 	private float CalculatePatternY(PatternMode mode, int step)
@@ -317,8 +321,8 @@ public partial class ObstacleManager : Node
 		topY = Mathf.Clamp(topY, _spawnMinY, _spawnMaxY);
 		bottomY = Mathf.Clamp(bottomY, _spawnMinY, _spawnMaxY);
 
-		SpawnObstacleAtPosition(ObstacleType.Mine, new Vector2(800, topY));
-		SpawnObstacleAtPosition(ObstacleType.Mine, new Vector2(800, bottomY));
+		SpawnObstacleAtPosition(ObstacleType.Mine, new Vector2(SpawnX, topY));
+		SpawnObstacleAtPosition(ObstacleType.Mine, new Vector2(SpawnX, bottomY));
 		_patternStep++;
 	}
 
@@ -343,10 +347,10 @@ public partial class ObstacleManager : Node
 		switch (spawnType)
 		{
 			case SpawnType.Random:
-				obstacle.Position = new Vector2(1000, (float)GD.RandRange(_spawnMinY, _spawnMaxY));
+				obstacle.Position = new Vector2(SpawnX, (float)GD.RandRange(_spawnMinY, _spawnMaxY));
 				break;
 			case SpawnType.TargetPlayer:
-				obstacle.Position = new Vector2(1000, _gameManager._player.Position.Y);
+				obstacle.Position = new Vector2(SpawnX, _gameManager._player.Position.Y);
 				break;
 		}
 
@@ -362,6 +366,8 @@ public partial class ObstacleManager : Node
 				return SpawnMine();
 			case ObstacleType.HealthPowerUp:
 				return SpawnHealthPowerUp();
+			case ObstacleType.MaxHealthPowerUp:
+				return SpawnMaxHealthPowerUp();
 			default:
 				return null;
 		}
@@ -381,6 +387,14 @@ public partial class ObstacleManager : Node
 		HealthPowerUp healthPowerUp = healthPowerUpScene.Instantiate<HealthPowerUp>();
 		AddChild(healthPowerUp);
 		return healthPowerUp;
+	}
+
+	private Obstacle SpawnMaxHealthPowerUp()
+	{
+		var maxHealthPowerUpScene = GD.Load<PackedScene>(MAX_HEALTH_POWERUP_PATH);
+		MaxHealthPowerUp maxHealthPowerUp = maxHealthPowerUpScene.Instantiate<MaxHealthPowerUp>();
+		AddChild(maxHealthPowerUp);
+		return maxHealthPowerUp;
 	}
 
 	#endregion
@@ -438,7 +452,8 @@ public enum PatternMode
 public enum ObstacleType
 {
 	Mine,
-	HealthPowerUp
+	HealthPowerUp,
+	MaxHealthPowerUp
 }
 
 public enum SpawnType
