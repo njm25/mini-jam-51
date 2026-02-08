@@ -54,6 +54,7 @@ public partial class Player : CharacterBody2D
 	private AudioStreamPlayer _splashPlayer;
 	private AudioStreamPlayer _musicPlayer;
 	private AudioStream _runningLoop;
+	private SoundWaves _soundWaves;
 	private bool _wasUnderwater = true;
 	public int Score => (int)(_scoreStopwatch.Elapsed.TotalSeconds / 3);
 	private const string HUD_PATH = "res://nodes/Player/PlayerHud/PlayerHud.tscn";
@@ -90,6 +91,8 @@ public partial class Player : CharacterBody2D
 		LoadMusic();
 		LoadHud();
 		ShowTutorialLabels();
+		_soundWaves = new SoundWaves();
+		AddChild(_soundWaves);
 	}
 	
 	public override void _Process(double delta)
