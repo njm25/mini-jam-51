@@ -41,6 +41,7 @@ public partial class Player : CharacterBody2D
 	private PlayerHud _hud;
 	public Stopwatch _scoreStopwatch = new Stopwatch();
 	private Timer _iFrameTimer;
+	private AnimatedSprite2D _swimmingSprite;
 	public int Score => (int)(_scoreStopwatch.Elapsed.TotalSeconds / 3);
 	private const string HUD_PATH = "res://nodes/Player/PlayerHud/PlayerHud.tscn";
 
@@ -51,6 +52,8 @@ public partial class Player : CharacterBody2D
 		base._Ready();
 		_gameManager = GetParent<GameManager>();
 		_collisionShape = GetNode<CollisionShape2D>("CollisionShape2D");
+		_swimmingSprite = GetNode<AnimatedSprite2D>("SwimmingSprite");
+		_swimmingSprite.Play();
 		_area2D = GetNode<Area2D>("Area2D");
 		_area2D.BodyEntered += BodyEntered;
 		_scoreStopwatch.Start();

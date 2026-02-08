@@ -1,7 +1,7 @@
 [gd_scene load_steps=5 format=3 uid="uid://b0wx8uq63i7il"]
 
 [ext_resource type="Script" uid="uid://6k0itdj8fyrb" path="res://nodes/Player/Player.cs" id="1_osw0o"]
-[ext_resource type="Texture2D" uid="uid://bmqs5feffciri" path="res://assets/icon.svg" id="2_y77dg"]
+[ext_resource type="SpriteFrames" uid="uid://bkcucndnbuytb" path="res://assets/swimming.gif" id="2_riwpy"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_riwpy"]
 size = Vector2(7, 4.5)
@@ -15,10 +15,11 @@ collision_layer = 2
 collision_mask = 2
 script = ExtResource("1_osw0o")
 
-[node name="Icon" type="Sprite2D" parent="."]
-position = Vector2(-3.8146973e-06, -7.0000024)
-scale = Vector2(0.171875, 0.28124997)
-texture = ExtResource("2_y77dg")
+[node name="SwimmingSprite" type="AnimatedSprite2D" parent="."]
+position = Vector2(23, 8)
+scale = Vector2(0.75, 0.75)
+sprite_frames = ExtResource("2_riwpy")
+animation = &"gif"
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 position = Vector2(0, 8)
