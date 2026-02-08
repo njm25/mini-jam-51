@@ -1,0 +1,17 @@
+[gd_scene load_steps=4 format=3 uid="uid://b1ymejbiog0oa"]
+
+[ext_resource type="Script" uid="uid://cyi202tle5xar" path="res://nodes/obstacles/powerUps/SpeakerBatteryPowerUp/SpeakerBatteryPowerUp.cs" id="1_5nylc"]
+[ext_resource type="Texture2D" uid="uid://cw2nbqq0jikv7" path="res://assets/batt.png" id="2_h8icp"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_2jqm7"]
+radius = 20.024984
+
+[node name="PowerUp" type="RigidBody2D"]
+script = ExtResource("1_5nylc")
+
+[node name="Battery" type="Sprite2D" parent="."]
+scale = Vector2(0.75, 0.75)
+texture = ExtResource("2_h8icp")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_2jqm7")

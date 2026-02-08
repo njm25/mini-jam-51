@@ -34,6 +34,13 @@ public partial class Player : CharacterBody2D
 	public float WaterLineOffset { get; set; } = 200f;
 	[Export]
 	public float BreathableOffset { get; set; } = 25f;
+	[Export]
+	public float SpeakerCharge { get; set; } = 100;
+	[Export]
+	public float MaxSpeakerCharge { get; set; } = 100;
+	[Export]
+	public float SpeakerChargeDepletionRate { get; set; } = 20f;
+	public bool IsUsingSpeaker => Input.IsActionPressed("use") && SpeakerCharge > 0;
 	public float _waterLineY => -(GetViewportRect().Size.Y - WaterLineOffset);
 	public GameManager _gameManager;
 	private CollisionShape2D _collisionShape;
@@ -42,6 +49,7 @@ public partial class Player : CharacterBody2D
 	public Stopwatch _scoreStopwatch = new Stopwatch();
 	private Timer _iFrameTimer;
 	private AnimatedSprite2D _swimmingSprite;
+	private AnimatedSprite2D _iFrameSprite;
 	public int Score => (int)(_scoreStopwatch.Elapsed.TotalSeconds / 3);
 	private const string HUD_PATH = "res://nodes/Player/PlayerHud/PlayerHud.tscn";
 
@@ -54,6 +62,8 @@ public partial class Player : CharacterBody2D
 		_collisionShape = GetNode<CollisionShape2D>("CollisionShape2D");
 		_swimmingSprite = GetNode<AnimatedSprite2D>("SwimmingSprite");
 		_swimmingSprite.Play();
+		_iFrameSprite = GetNode<AnimatedSprite2D>("IFrameSprite");
+		_iFrameSprite.Play();
 		_area2D = GetNode<Area2D>("Area2D");
 		_area2D.BodyEntered += BodyEntered;
 		_scoreStopwatch.Start();
@@ -105,6 +115,16 @@ public partial class Player : CharacterBody2D
 		Velocity = v;
 		MoveAndSlide();
 
+		// battery usage
+		if (Input.IsActionPressed("use") && SpeakerCharge > 0)
+		{
+			SpeakerCharge -= SpeakerChargeDepletionRate * (float)delta;
+			if (SpeakerCharge < 0)
+			{
+				SpeakerCharge = 0;
+			}
+		}
+
 		// Air management
 		bool isBreathable = Position.Y < _waterLineY + BreathableOffset;
 		if (isBreathable)
@@ -146,6 +166,8 @@ public partial class Player : CharacterBody2D
 			IsInvincible = true;
 			_iFrameTimer.Start();
 			Modulate = new Color(1, 1, 1, 0.5f); 
+			_iFrameSprite.Visible = true;
+			_swimmingSprite.Visible = false;
 		}
 	}
 
@@ -153,7 +175,8 @@ public partial class Player : CharacterBody2D
 	{
 		IsInvincible = false;
 		Modulate = new Color(1, 1, 1, 1); 
-
+		_iFrameSprite.Visible = false;
+		_swimmingSprite.Visible = true;
 	}
 
 	public void KillPlayer()

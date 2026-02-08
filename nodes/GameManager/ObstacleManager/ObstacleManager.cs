@@ -35,6 +35,7 @@ public partial class ObstacleManager : Node
 	private const string HEALTH_POWERUP_PATH = "res://nodes/obstacles/powerUps/HealthPowerUp/HealthPowerUp.tscn";
 	private const string MAX_HEALTH_POWERUP_PATH = "res://nodes/obstacles/powerUps/MaxHealthPowerUp/MaxHealthPowerUp.tscn";
 	private const string AIR_BUBBLE_POWERUP_PATH = "res://nodes/obstacles/powerUps/AirBubblePowerUp/AirBubblePowerUp.tscn";
+	private const string SPEAKER_BATTERY_POWERUP_PATH = "res://nodes/obstacles/powerUps/SpeakerBatteryPowerUp/SpeakerBatteryPowerUp.tscn";
 	public GameManager _gameManager;
 
 	private Timer _spawnTimer;
@@ -225,11 +226,13 @@ public partial class ObstacleManager : Node
 	{
 		if (GD.Randf() < 0.03f)
 		{
-			if (GD.Randf() < 0.5f)
+			float rand = GD.Randf();
+			if (rand < 0.33f)
 				SpawnObstacle(ObstacleType.HealthPowerUp, SpawnType.Random);
-			else
+			else if (rand < 0.66f)
 				SpawnObstacle(ObstacleType.MaxHealthPowerUp, SpawnType.Random);
-
+			else 
+				SpawnObstacle(ObstacleType.SpeakerBatteryPowerUp, SpawnType.Random);
 			return;
 		}
 
@@ -415,6 +418,8 @@ public partial class ObstacleManager : Node
 				return SpawnMaxHealthPowerUp();
 			case ObstacleType.AirBubblePowerUp:
 				return SpawnAirBubblePowerUp();
+			case ObstacleType.SpeakerBatteryPowerUp:
+				return SpawnSpeakerBatteryPowerUp();
 			default:
 				return null;
 		}
@@ -450,6 +455,14 @@ public partial class ObstacleManager : Node
 		AirBubblePowerUp airBubblePowerUp = airBubblePowerUpScene.Instantiate<AirBubblePowerUp>();
 		AddChild(airBubblePowerUp);
 		return airBubblePowerUp;
+	}
+
+	private Obstacle SpawnSpeakerBatteryPowerUp()
+	{
+		var speakerBatteryPowerUpScene = GD.Load<PackedScene>(SPEAKER_BATTERY_POWERUP_PATH);
+		SpeakerBatteryPowerUp speakerBatteryPowerUp = speakerBatteryPowerUpScene.Instantiate<SpeakerBatteryPowerUp>();
+		AddChild(speakerBatteryPowerUp);
+		return speakerBatteryPowerUp;
 	}
 
 	#endregion
@@ -510,7 +523,8 @@ public enum ObstacleType
 	Mine,
 	HealthPowerUp,
 	MaxHealthPowerUp,
-	AirBubblePowerUp
+	AirBubblePowerUp,
+	SpeakerBatteryPowerUp
 }
 
 public enum SpawnType

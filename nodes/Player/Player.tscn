@@ -1,7 +1,8 @@
-[gd_scene load_steps=5 format=3 uid="uid://b0wx8uq63i7il"]
+[gd_scene load_steps=6 format=3 uid="uid://b0wx8uq63i7il"]
 
 [ext_resource type="Script" uid="uid://6k0itdj8fyrb" path="res://nodes/Player/Player.cs" id="1_osw0o"]
 [ext_resource type="SpriteFrames" uid="uid://bkcucndnbuytb" path="res://assets/swimming.gif" id="2_riwpy"]
+[ext_resource type="SpriteFrames" uid="uid://blsnkf87ncm4i" path="res://assets/iframe.gif" id="3_mj6xb"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_riwpy"]
 size = Vector2(7, 4.5)
@@ -19,6 +20,13 @@ script = ExtResource("1_osw0o")
 position = Vector2(23, 8)
 scale = Vector2(0.75, 0.75)
 sprite_frames = ExtResource("2_riwpy")
+animation = &"gif"
+
+[node name="IFrameSprite" type="AnimatedSprite2D" parent="."]
+visible = false
+position = Vector2(1, 7)
+scale = Vector2(0.75, 0.75)
+sprite_frames = ExtResource("3_mj6xb")
 animation = &"gif"
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]

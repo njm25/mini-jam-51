@@ -44,6 +44,8 @@ public partial class PlayerHud : Node
 		_label.Text = "Lives left: " + _player.Health.ToString()  + "/" + _player.MaxHealth.ToString()
 		+ "\nScore: " + _player.Score.ToString() 
 		+"\nAir level: " + _player.AirLevel.ToString() + "/" + _player.MaxAir.ToString()
+		+"\nSpeaker Battery: " + _player.SpeakerCharge.ToString() + "/" + _player.MaxSpeakerCharge.ToString()
+		+ "\nIs using speaker: " + _player.IsUsingSpeaker.ToString()
 		+"\nObstacle Mode: " + _player._gameManager._obstacleManager._currentMode.ToString();
 
 		if(_player._gameManager._obstacleManager._currentMode == SpawnMode.Confine)
