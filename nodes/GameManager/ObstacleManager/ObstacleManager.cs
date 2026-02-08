@@ -48,6 +48,12 @@ public partial class ObstacleManager : Node
 	private int _patternStep = 0;
 	private float _screenHeight;
 	private bool _isPaused = false;
+	private bool _firstConfineDone = false;
+
+	// Mode transition delay
+	[Export]
+	public float ModeTransitionDelay = 1.5f;
+	private Timer _modeTransitionTimer;
 
 	// Computed spawn bounds
 	private float _spawnMinY;   // ceiling edge
@@ -64,6 +70,7 @@ public partial class ObstacleManager : Node
 		_spawnRange = _spawnMaxY - _spawnMinY;
 		LoadSpawnTimer();
 		LoadModeSwitchTimer();
+		LoadModeTransitionTimer();
 	}
 
 	public override void _Process(double delta)
@@ -110,6 +117,15 @@ public partial class ObstacleManager : Node
 		AddChild(_modeSwitchTimer);
 	}
 
+	private void LoadModeTransitionTimer()
+	{
+		_modeTransitionTimer = new Timer();
+		_modeTransitionTimer.OneShot = true;
+		_modeTransitionTimer.WaitTime = ModeTransitionDelay;
+		_modeTransitionTimer.Timeout += OnModeTransitionComplete;
+		AddChild(_modeTransitionTimer);
+	}
+
 	#endregion
 
 	#region Mode Switching
@@ -117,10 +133,20 @@ public partial class ObstacleManager : Node
 	private void OnModeSwitchTimeout()
 	{
 		_isStandardTurn = !_isStandardTurn;
+
+		// Stop spawning during transition
+		_spawnTimer.Stop();
+		_modeTransitionTimer.Start();
+	}
+
+	private void OnModeTransitionComplete()
+	{
 		if (_isStandardTurn)
 			EnterStandardMode();
 		else
 			EnterRandomMode();
+
+		_spawnTimer.Start();
 	}
 
 	private void EnterStandardMode()
@@ -137,8 +163,17 @@ public partial class ObstacleManager : Node
 		if (GD.Randf() < 0.5f)
 		{
 			_currentMode = SpawnMode.Confine;
-			var modes = Enum.GetValues(typeof(ConfineMode));
-			_currentConfineMode = (ConfineMode)modes.GetValue((int)(GD.Randi() % modes.Length));
+
+			if (!_firstConfineDone)
+			{
+				_currentConfineMode = ConfineMode.Straight;
+				_firstConfineDone = true;
+			}
+			else
+			{
+				var modes = Enum.GetValues(typeof(ConfineMode));
+				_currentConfineMode = (ConfineMode)modes.GetValue((int)(GD.Randi() % modes.Length));
+			}
 		}
 		else
 		{
@@ -156,6 +191,7 @@ public partial class ObstacleManager : Node
 		_patternStep = 0;
 		_elapsedTime = 0f;
 		_isPaused = false;
+		_firstConfineDone = false;
 		_spawnTimer.WaitTime = SpawnInterval;
 		_modeSwitchTimer.Stop();
 		_modeSwitchTimer.Start();
@@ -425,6 +461,7 @@ public partial class ObstacleManager : Node
 		_isPaused = !_isPaused;
 		_spawnTimer.Paused = _isPaused;
 		_modeSwitchTimer.Paused = _isPaused;
+		_modeTransitionTimer.Paused = _isPaused;
 		foreach (Obstacle obstacle in _obstacles)
 			obstacle.Pause();
 	}

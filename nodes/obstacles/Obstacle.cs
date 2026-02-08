@@ -49,6 +49,7 @@ public partial class Obstacle : RigidBody2D
 	{
 		Freeze = !Freeze;
 		IsPaused = Freeze;
+		_destroyTimer.Paused = IsPaused;
 	}
 
 	public void Act()
