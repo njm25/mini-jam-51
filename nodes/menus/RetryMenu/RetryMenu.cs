@@ -4,6 +4,7 @@ using System;
 public partial class RetryMenu : Control
 {
 	private GameManager _gameManager;
+	public Label _deathReason;
 	public override void _Ready()
 	{
 		base._Ready();
@@ -13,6 +14,7 @@ public partial class RetryMenu : Control
 		retryButton.Pressed += OnRetryButtonPressed;
 		Button quitButton = container.GetNode<Button>("QuitButton");
 		quitButton.Pressed += OnQuitButtonPressed;
+		_deathReason = GetNode<Label>("DeathReason");
 	}
 	private void OnRetryButtonPressed()
 	{

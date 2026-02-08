@@ -11,6 +11,7 @@ public partial class MaxHealthPowerUp : PowerUp
 	public override void Interact()
 	{
 		Player player = _obstacleManager._gameManager._player;
+		DestroyLabelText = "+1 Max Health";
 		player.MaxHealth++;
 	}
 

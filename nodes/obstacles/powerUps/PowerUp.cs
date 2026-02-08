@@ -13,4 +13,28 @@ public partial class PowerUp : Obstacle
 	}
 
 
+	protected override void Destroy()
+	{
+		Label destroyLabel = new Label();
+		destroyLabel.Text = DestroyLabelText;
+		destroyLabel.AddThemeColorOverride("font_color", Colors.Black);
+		var font = GD.Load<Font>("res://assets/mspain.ttf");
+		if (font != null)
+			destroyLabel.AddThemeFontOverride("font", font);
+		destroyLabel.Position = new Vector2(Position.X + 20, Position.Y - 20);
+		GetParent().AddChild(destroyLabel);
+
+		Timer labelTimer = new Timer();
+		labelTimer.WaitTime = 2.0f;
+		labelTimer.OneShot = true;
+		labelTimer.Timeout += () =>
+		{
+			destroyLabel.QueueFree();
+		};
+		destroyLabel.AddChild(labelTimer);
+		labelTimer.Start();
+
+		base.Destroy();
+	}
+
 }

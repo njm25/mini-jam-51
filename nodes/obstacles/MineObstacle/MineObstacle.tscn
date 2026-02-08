@@ -1,6 +1,7 @@
-[gd_scene load_steps=5 format=3 uid="uid://qwki3dqnxts5"]
+[gd_scene load_steps=6 format=3 uid="uid://qwki3dqnxts5"]
 
 [ext_resource type="Script" uid="uid://bi63e0ylusxfu" path="res://nodes/obstacles/MineObstacle/MineObstacle.cs" id="1_mfx55"]
+[ext_resource type="Texture2D" uid="uid://7kmy4lxhjviw" path="res://assets/chain.png" id="2_1ur50"]
 [ext_resource type="Texture2D" uid="uid://58esysxfsahr" path="res://assets/mine.png" id="2_mfx55"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_mfx55"]
@@ -12,6 +13,11 @@ radius = 217.0576
 [node name="MineObstacle" type="RigidBody2D"]
 collision_mask = 0
 script = ExtResource("1_mfx55")
+
+[node name="Chain" type="Sprite2D" parent="."]
+z_index = -595
+position = Vector2(-15, 656)
+texture = ExtResource("2_1ur50")
 
 [node name="Mine" type="Sprite2D" parent="."]
 position = Vector2(0.9936613, -1.9375006)

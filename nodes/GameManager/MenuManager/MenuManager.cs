@@ -10,9 +10,11 @@ public partial class MenuManager : Node
 	public RetryMenu _retryMenu;
 	private CanvasLayer _canvasLayer;
     private Stack<Control> _menuStack = new Stack<Control>();
+	private AudioStreamPlayer _menuMusicPlayer;
 	const string START_MENU_PATH = "res://nodes/menus/StartMenu/StartMenu.tscn";
 	const string RETRY_MENU_PATH = "res://nodes/menus/RetryMenu/RetryMenu.tscn";
 	const string PAUSE_MENU_PATH = "res://nodes/menus/PauseMenu/PauseMenu.tscn";
+    const string MENU_MUSIC_PATH = "res://assets/menu.wav";
 
     #region Lifecycle
 
@@ -23,6 +25,7 @@ public partial class MenuManager : Node
 
         LoadCanvasLayer();
         LoadMenus();
+        LoadMenuMusic();
     }
 
     #endregion
@@ -55,6 +58,16 @@ public partial class MenuManager : Node
         _canvasLayer.AddChild(_pauseMenu);
     }
 
+    private void LoadMenuMusic()
+    {
+        _menuMusicPlayer = new AudioStreamPlayer();
+        var stream = GD.Load<AudioStream>(MENU_MUSIC_PATH);
+        _menuMusicPlayer.Stream = stream;
+        _menuMusicPlayer.Autoplay = false;
+        AddChild(_menuMusicPlayer);
+        _menuMusicPlayer.Finished += () => _menuMusicPlayer.Play();
+    }
+
     #endregion
 
     #region Menu Management
@@ -67,6 +80,8 @@ public partial class MenuManager : Node
         }
         menu.Visible = true;
         _menuStack.Push(menu);
+        if (!_menuMusicPlayer.Playing)
+            _menuMusicPlayer.Play();
     }
 
     public void Back()
@@ -79,6 +94,10 @@ public partial class MenuManager : Node
         {
             _menuStack.Peek().Visible = true;
         }
+        else
+        {
+            _menuMusicPlayer.Stop();
+        }
     }
 
     public void Close()
@@ -89,6 +108,7 @@ public partial class MenuManager : Node
             _menuStack.Peek().Visible = false;
             _menuStack.Pop();
         }
+        _menuMusicPlayer.Stop();
     }
 
     #endregion

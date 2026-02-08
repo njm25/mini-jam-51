@@ -12,7 +12,10 @@ public partial class HealthPowerUp : PowerUp
 	{
 		Player player = _obstacleManager._gameManager._player;
 		if (player.Health < player.MaxHealth)
+		{
+			DestroyLabelText = "+1 Health";
 			player.Health++;
+		}
 	}
 
 }

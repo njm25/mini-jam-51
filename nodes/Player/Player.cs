@@ -89,7 +89,7 @@ public partial class Player : CharacterBody2D
 
 		if (Input.IsActionJustPressed("kill"))
 		{
-			KillPlayer();
+			KillPlayer(DamageType.Suicide);
 		}
 	}
 
@@ -137,7 +137,7 @@ public partial class Player : CharacterBody2D
 			if (AirLevel <= 0)
 			{
 				AirLevel = 0;
-				TakeDamage();
+				TakeDamage(DamageType.AirLevel);
 			}
 		}
 	}
@@ -153,22 +153,42 @@ public partial class Player : CharacterBody2D
 		}
 	}
 
-	public void TakeDamage()
+	public void TakeDamage(DamageType damageType)
 	{
 		if (IsInvincible) return;
 		Health--;
 		if (Health <= 0)
 		{
-			KillPlayer();
+			KillPlayer(damageType);
 		}
 		else
 		{
+			SpawnDamageLabel();
 			IsInvincible = true;
 			_iFrameTimer.Start();
 			Modulate = new Color(1, 1, 1, 0.5f); 
 			_iFrameSprite.Visible = true;
 			_swimmingSprite.Visible = false;
 		}
+	}
+
+	private void SpawnDamageLabel()
+	{
+		Label damageLabel = new Label();
+		damageLabel.Text = "-1 Health";
+		damageLabel.AddThemeColorOverride("font_color", Colors.Black);
+		var font = GD.Load<Font>("res://assets/mspain.ttf");
+		if (font != null)
+			damageLabel.AddThemeFontOverride("font", font);
+		damageLabel.Position = new Vector2(Position.X + 20, Position.Y - 20);
+		GetParent().AddChild(damageLabel);
+
+		Timer labelTimer = new Timer();
+		labelTimer.WaitTime = 2.0f;
+		labelTimer.OneShot = true;
+		labelTimer.Timeout += () => damageLabel.QueueFree();
+		damageLabel.AddChild(labelTimer);
+		labelTimer.Start();
 	}
 
 	private void IFrameOver()
@@ -179,9 +199,17 @@ public partial class Player : CharacterBody2D
 		_swimmingSprite.Visible = true;
 	}
 
-	public void KillPlayer()
+	public void KillPlayer(DamageType damageType)
 	{
-		_gameManager.EndGame();
+		string reason = damageType switch
+		{
+			DamageType.Obstacle => "Killed by Obstacle",
+			DamageType.AirLevel => "Drowned",
+			DamageType.Suicide => "Committed Suicide",
+			_ => throw new NotImplementedException(),
+		};
+		
+		_gameManager.EndGame(reason);
 	}
 
 	#endregion
@@ -200,4 +228,11 @@ public partial class Player : CharacterBody2D
 
 	#endregion
 
+}
+
+public enum DamageType
+{
+	Obstacle,
+	AirLevel,
+	Suicide
 }

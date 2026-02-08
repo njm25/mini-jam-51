@@ -1,16 +1,23 @@
-[gd_scene load_steps=2 format=3 uid="uid://2uhkhsi8ln21"]
+[gd_scene load_steps=5 format=3 uid="uid://2uhkhsi8ln21"]
 
 [ext_resource type="Script" uid="uid://ghdsxi2kkvle" path="res://nodes/Player/PlayerHud/PlayerHud.cs" id="1_8mdk2"]
+[ext_resource type="Texture2D" uid="uid://cykregk67jt23" path="res://assets/emptyheart.png" id="2_y4pry"]
+[ext_resource type="Texture2D" uid="uid://bu5ryyfdls4v2" path="res://assets/filledheart.png" id="3_rdkhp"]
+[ext_resource type="Texture2D" uid="uid://gftmaroea6rl" path="res://assets/progressbar.png" id="4_2rs0c"]
 
 [node name="PlayerHud" type="Control"]
 layout_mode = 3
 anchors_preset = 0
 script = ExtResource("1_8mdk2")
 
-[node name="HealthLabel" type="Label" parent="."]
-layout_mode = 0
-offset_left = 816.0
-offset_top = 86.0
-offset_right = 856.0
-offset_bottom = 109.0
-text = "3"
+[node name="EmptyHeart" type="Sprite2D" parent="."]
+visible = false
+texture = ExtResource("2_y4pry")
+
+[node name="FilledHeart" type="Sprite2D" parent="."]
+visible = false
+texture = ExtResource("3_rdkhp")
+
+[node name="ProgressBar" type="Sprite2D" parent="."]
+visible = false
+texture = ExtResource("4_2rs0c")

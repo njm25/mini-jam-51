@@ -84,10 +84,11 @@ public partial class GameManager : Node2D
 	#endregion
 
 	#region Game Logic
-	public void EndGame()
+	public void EndGame(string reason = "Game Over")
 	{
 		GameState = GameState.GameOver;
 		_menuManager.Close();
+		_menuManager._retryMenu._deathReason.Text = reason;
 		_menuManager.Navigate(_menuManager._retryMenu);
 
 		UnloadCamera();

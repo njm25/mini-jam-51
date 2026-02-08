@@ -15,6 +15,8 @@ public partial class Obstacle : RigidBody2D
 	public bool BobUpAndDown { get; set; } = false;
 	[Export]
 	public float BobAmount { get; set; } = 10f;
+	[Export]
+	public string DestroyLabelText { get; set; }
 	private CollisionShape2D _collisionShape;
 	public ObstacleManager _obstacleManager;
 	private Timer _destroyTimer;
@@ -75,15 +77,15 @@ public partial class Obstacle : RigidBody2D
 		if (DoesDamage)
 		{
 			Player player = _obstacleManager._gameManager._player;
-			player.TakeDamage();
+			player.TakeDamage(DamageType.Obstacle);
 		}
 	}
 
-	private void Destroy()
+	protected virtual void Destroy()
 	{
-		QueueFree();
 		if (_obstacleManager._obstacles.Contains(this))
 			_obstacleManager._obstacles.Remove(this);
+		QueueFree();
 	}
 
 }

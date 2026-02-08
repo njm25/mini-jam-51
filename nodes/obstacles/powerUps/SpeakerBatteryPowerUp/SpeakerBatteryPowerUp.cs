@@ -13,6 +13,7 @@ public partial class SpeakerBatteryPowerUp : PowerUp
 	public override void Interact()
 	{
 		Player player = _obstacleManager._gameManager._player;
+		DestroyLabelText = "+ Speaker Charge";
 		player.SpeakerCharge = Math.Min(player.SpeakerCharge + SpeakerChargeAmount, player.MaxSpeakerCharge);
 	}
 
