@@ -33,6 +33,7 @@ public partial class MineObstacle : Obstacle
 	public override void _PhysicsProcess(double delta)
 	{
 		base._PhysicsProcess(delta);
+		if (player == null) return;
 		if (!player.IsUsingSpeaker || !_isPlayerInRange) return; 
 		Vector2 direction = (Position - player.Position).Normalized();
 		Position += direction * 200 * (float)delta;
