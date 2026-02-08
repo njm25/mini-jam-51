@@ -6,7 +6,7 @@ public partial class PowerUp : Obstacle
 
 	public override void _Ready()
 	{
-		DESTROY_SOUND_PATH = "";
+		DESTROY_SOUND_PATH = "res://assets/powerup.mp3";
 		base._Ready();
 		DoesDamage = false;
 		BypassIFrame = true;

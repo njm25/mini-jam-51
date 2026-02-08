@@ -1,0 +1,39 @@
+[gd_scene load_steps=9 format=3 uid="uid://ctwufo1i0gi2l"]
+
+[ext_resource type="Script" uid="uid://c06d2pqamr66e" path="res://nodes/menus/components/ButtonComponent/ButtonComponent.cs" id="1_b8xbx"]
+[ext_resource type="AudioStream" uid="uid://wogynjirsnj1" path="res://assets/hover.wav" id="2_v0xt8"]
+[ext_resource type="AudioStream" uid="uid://dwl8tsghb3re5" path="res://assets/click.wav" id="3_ag14v"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_pk65b"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_ag14v"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_ieark"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_e0ypd"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_tx77d"]
+
+[node name="ButtonComponent" type="Button"]
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_colors/font_focus_color = Color(0, 0, 0, 1)
+theme_override_colors/font_pressed_color = Color(1, 1, 1, 0)
+theme_override_colors/font_hover_pressed_color = Color(0.4006977, 0.40069774, 0.40069756, 1)
+theme_override_colors/font_disabled_color = Color(1, 1, 1, 0)
+theme_override_colors/font_outline_color = Color(1, 1, 1, 0)
+theme_override_colors/icon_focus_color = Color(1, 1, 1, 0)
+theme_override_colors/icon_pressed_color = Color(1, 1, 1, 0)
+theme_override_colors/icon_hover_color = Color(1, 1, 1, 0)
+theme_override_colors/icon_hover_pressed_color = Color(1, 1, 1, 0)
+theme_override_styles/normal = SubResource("StyleBoxEmpty_pk65b")
+theme_override_styles/pressed = SubResource("StyleBoxEmpty_ag14v")
+theme_override_styles/hover = SubResource("StyleBoxEmpty_ieark")
+theme_override_styles/disabled = SubResource("StyleBoxEmpty_e0ypd")
+theme_override_styles/focus = SubResource("StyleBoxEmpty_tx77d")
+script = ExtResource("1_b8xbx")
+
+[node name="HoverSound" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("2_v0xt8")
+
+[node name="ClickSound" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("3_ag14v")

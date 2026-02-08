@@ -235,8 +235,15 @@ public partial class ObstacleManager : Node
 				SpawnObstacle(ObstacleType.SpeakerBatteryPowerUp, SpawnType.Random);
 			return;
 		}
-
 		SpawnObstacle(ObstacleType.Mine, SpawnType.TargetPlayer);
+
+		SceneTreeTimer delayTimer = GetTree().CreateTimer(0.15f);
+		delayTimer.Timeout += () => TrySpawnObstacle();
+	}
+
+	private void TrySpawnObstacle()
+	{
+		if (_isPaused) return;
 		SpawnObstacle(ObstacleType.Mine, SpawnType.Random);
 	}
 
@@ -388,7 +395,7 @@ public partial class ObstacleManager : Node
 	}
 
 	private Obstacle SpawnObstacle(ObstacleType obstacleType, SpawnType spawnType)
-	{
+	{;
 		Obstacle obstacle = InstantiateObstacle(obstacleType);
 		if (obstacle == null) return null;
 

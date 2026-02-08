@@ -5,7 +5,7 @@ public partial class WorldLines : Node2D
 	public Player _player;
 	private float _scrollOffset = 0f;
 
-	private const float SCROLL_SPEED = 100f;
+	private const float SCROLL_SPEED = 200f;
 
 	// Repeating pixel pattern: Y offsets to create a subtle pixelated wave.
 	// 0 = baseline, -1 = one pixel up, 1 = one pixel down.
@@ -19,7 +19,8 @@ public partial class WorldLines : Node2D
 
 		if (!_player.IsPaused)
 		{
-			_scrollOffset += SCROLL_SPEED * (float)delta;
+			float speedMultiplier = _player._gameManager._obstacleManager.GetSpeedMultiplier();
+			_scrollOffset += SCROLL_SPEED * speedMultiplier * (float)delta;
 		}
 
 		QueueRedraw();

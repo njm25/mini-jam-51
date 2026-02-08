@@ -1,6 +1,7 @@
-[gd_scene load_steps=2 format=3 uid="uid://b0wxi63e8p0aj"]
+[gd_scene load_steps=3 format=3 uid="uid://b0wxi63e8p0aj"]
 
 [ext_resource type="Script" uid="uid://fxs3tqbbty7e" path="res://nodes/menus/PauseMenu/PauseMenu.cs" id="1_y15r6"]
+[ext_resource type="PackedScene" uid="uid://ctwufo1i0gi2l" path="res://nodes/menus/components/ButtonComponent/ButtonComponent.tscn" id="2_jfjil"]
 
 [node name="PauseMenu" type="Control"]
 layout_mode = 3
@@ -14,10 +15,10 @@ offset_top = 151.0
 offset_right = 325.0
 offset_bottom = 191.0
 
-[node name="ResumeButton" type="Button" parent="VBoxContainer"]
+[node name="ResumeButton" parent="VBoxContainer" instance=ExtResource("2_jfjil")]
 layout_mode = 2
-text = "Resume Game"
+text = "Resume"
 
-[node name="QuitButton" type="Button" parent="VBoxContainer"]
+[node name="QuitButton" parent="VBoxContainer" instance=ExtResource("2_jfjil")]
 layout_mode = 2
 text = "Quit"

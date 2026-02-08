@@ -1,6 +1,7 @@
-[gd_scene load_steps=2 format=3 uid="uid://d2764inc23qtg"]
+[gd_scene load_steps=3 format=3 uid="uid://d2764inc23qtg"]
 
 [ext_resource type="Script" uid="uid://b7fyn3k7pvw1b" path="res://nodes/menus/StartMenu/StartMenu.cs" id="1_8rtu0"]
+[ext_resource type="PackedScene" uid="uid://ctwufo1i0gi2l" path="res://nodes/menus/components/ButtonComponent/ButtonComponent.tscn" id="2_up2b3"]
 
 [node name="StartMenu" type="Control"]
 layout_mode = 3
@@ -14,10 +15,10 @@ offset_top = 151.0
 offset_right = 325.0
 offset_bottom = 191.0
 
-[node name="StartButton" type="Button" parent="VBoxContainer"]
+[node name="StartButton" parent="VBoxContainer" instance=ExtResource("2_up2b3")]
 layout_mode = 2
-text = "Start Game"
+text = "Start"
 
-[node name="QuitButton" type="Button" parent="VBoxContainer"]
+[node name="QuitButton" parent="VBoxContainer" instance=ExtResource("2_up2b3")]
 layout_mode = 2
 text = "Quit"

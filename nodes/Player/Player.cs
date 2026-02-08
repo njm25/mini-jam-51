@@ -50,6 +50,9 @@ public partial class Player : CharacterBody2D
 	private Timer _iFrameTimer;
 	private AnimatedSprite2D _swimmingSprite;
 	private AnimatedSprite2D _iFrameSprite;
+	private AudioStreamPlayer _breathingPlayer;
+	private AudioStreamPlayer _splashPlayer;
+	private bool _wasUnderwater = true;
 	public int Score => (int)(_scoreStopwatch.Elapsed.TotalSeconds / 3);
 	private const string HUD_PATH = "res://nodes/Player/PlayerHud/PlayerHud.tscn";
 
@@ -73,6 +76,13 @@ public partial class Player : CharacterBody2D
 		_iFrameTimer.OneShot = true;
 		_iFrameTimer.WaitTime = IFrameDuration;
 		_iFrameTimer.Timeout += () => IFrameOver();
+		_breathingPlayer = new AudioStreamPlayer();
+		_breathingPlayer.Stream = GD.Load<AudioStream>("res://assets/breathing.wav");
+		AddChild(_breathingPlayer);
+		_splashPlayer = new AudioStreamPlayer();
+		_splashPlayer.Stream = GD.Load<AudioStream>("res://assets/splash.mp3");
+		_splashPlayer.VolumeDb = -10f;
+		AddChild(_splashPlayer);
 		LoadHud();
 	}
 	
@@ -129,10 +139,24 @@ public partial class Player : CharacterBody2D
 		bool isBreathable = Position.Y < _waterLineY + BreathableOffset;
 		if (isBreathable)
 		{
+			if (_wasUnderwater)
+			{
+				_breathingPlayer.Play();
+				_wasUnderwater = false;
+			}
 			AirLevel = Mathf.Min(AirLevel + AirReplenishRate * (float)delta, MaxAir);
 		}
 		else
 		{
+			if (!_wasUnderwater)
+			{
+				_splashPlayer.Play();
+			}
+			_wasUnderwater = true;
+			if (_breathingPlayer.Playing)
+			{
+				_breathingPlayer.Stop();
+			}
 			AirLevel -= AirDepletionRate * (float)delta;
 			if (AirLevel <= 0)
 			{

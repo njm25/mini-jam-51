@@ -1,6 +1,7 @@
-[gd_scene load_steps=3 format=3 uid="uid://bs0x2g1k2pmpb"]
+[gd_scene load_steps=4 format=3 uid="uid://bs0x2g1k2pmpb"]
 
 [ext_resource type="Script" uid="uid://bfphxeh8nnecp" path="res://nodes/menus/RetryMenu/RetryMenu.cs" id="1_au41f"]
+[ext_resource type="PackedScene" uid="uid://ctwufo1i0gi2l" path="res://nodes/menus/components/ButtonComponent/ButtonComponent.tscn" id="2_a82v0"]
 [ext_resource type="FontFile" uid="uid://ebjhwdaf2mtr" path="res://assets/mspain.ttf" id="2_tf6el"]
 
 [node name="RetryMenu" type="Control"]
@@ -15,11 +16,11 @@ offset_top = 151.0
 offset_right = 325.0
 offset_bottom = 191.0
 
-[node name="RetryButton" type="Button" parent="VBoxContainer"]
+[node name="RetryButton" parent="VBoxContainer" instance=ExtResource("2_a82v0")]
 layout_mode = 2
 text = "Retry"
 
-[node name="QuitButton" type="Button" parent="VBoxContainer"]
+[node name="QuitButton" parent="VBoxContainer" instance=ExtResource("2_a82v0")]
 layout_mode = 2
 text = "Quit"
 
