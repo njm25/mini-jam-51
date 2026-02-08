@@ -22,6 +22,19 @@ public partial class Player : CharacterBody2D
 	public bool IsInvincible { get; set; } = false;
 	[Export]
 	public float IFrameDuration { get; set; } = 2f;
+	[Export]
+	public float AirLevel { get; set; } = 50f;
+	[Export]
+	public float AirDepletionRate { get; set; } = 2f;
+	[Export] 
+	public float AirReplenishRate { get; set; } = 30f;
+	[Export]
+	public float MaxAir { get; set; } = 50f;
+	[Export]
+	public float WaterLineOffset { get; set; } = 200f;
+	[Export]
+	public float BreathableOffset { get; set; } = 25f;
+	public float _waterLineY => -(GetViewportRect().Size.Y - WaterLineOffset);
 	public GameManager _gameManager;
 	private CollisionShape2D _collisionShape;
 	private Area2D _area2D;
@@ -81,13 +94,29 @@ public partial class Player : CharacterBody2D
 		v.X = 0;
 		v.Y += Gravity * (float)delta;
 
-		if (Input.IsActionPressed("ui_accept"))
+		if (Input.IsActionPressed("ui_accept") && Position.Y >= _waterLineY)
 		{
 			v.Y += -JumpPower;
 		}
 
 		Velocity = v;
 		MoveAndSlide();
+
+		// Air management
+		bool isBreathable = Position.Y < _waterLineY + BreathableOffset;
+		if (isBreathable)
+		{
+			AirLevel = Mathf.Min(AirLevel + AirReplenishRate * (float)delta, MaxAir);
+		}
+		else
+		{
+			AirLevel -= AirDepletionRate * (float)delta;
+			if (AirLevel <= 0)
+			{
+				AirLevel = 0;
+				TakeDamage();
+			}
+		}
 	}
 
 	private void BodyEntered(Node2D body)

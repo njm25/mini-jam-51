@@ -34,6 +34,7 @@ public partial class ObstacleManager : Node
 	private const string MINE_OBSTACLE_PATH = "res://nodes/obstacles/MineObstacle/MineObstacle.tscn";
 	private const string HEALTH_POWERUP_PATH = "res://nodes/obstacles/powerUps/HealthPowerUp/HealthPowerUp.tscn";
 	private const string MAX_HEALTH_POWERUP_PATH = "res://nodes/obstacles/powerUps/MaxHealthPowerUp/MaxHealthPowerUp.tscn";
+	private const string AIR_BUBBLE_POWERUP_PATH = "res://nodes/obstacles/powerUps/AirBubblePowerUp/AirBubblePowerUp.tscn";
 	public GameManager _gameManager;
 
 	private Timer _spawnTimer;
@@ -323,6 +324,14 @@ public partial class ObstacleManager : Node
 
 		SpawnObstacleAtPosition(ObstacleType.Mine, new Vector2(SpawnX, topY));
 		SpawnObstacleAtPosition(ObstacleType.Mine, new Vector2(SpawnX, bottomY));
+
+		// Chance to spawn an air bubble inside the confined area (between the two walls)
+		if (GD.Randf() < 0.05f)
+		{
+			float bubbleY = (float)GD.RandRange(bottomY, topY);
+			SpawnObstacleAtPosition(ObstacleType.AirBubblePowerUp, new Vector2(SpawnX, bubbleY));
+		}
+
 		_patternStep++;
 	}
 
@@ -368,6 +377,8 @@ public partial class ObstacleManager : Node
 				return SpawnHealthPowerUp();
 			case ObstacleType.MaxHealthPowerUp:
 				return SpawnMaxHealthPowerUp();
+			case ObstacleType.AirBubblePowerUp:
+				return SpawnAirBubblePowerUp();
 			default:
 				return null;
 		}
@@ -395,6 +406,14 @@ public partial class ObstacleManager : Node
 		MaxHealthPowerUp maxHealthPowerUp = maxHealthPowerUpScene.Instantiate<MaxHealthPowerUp>();
 		AddChild(maxHealthPowerUp);
 		return maxHealthPowerUp;
+	}
+
+	private Obstacle SpawnAirBubblePowerUp()
+	{
+		var airBubblePowerUpScene = GD.Load<PackedScene>(AIR_BUBBLE_POWERUP_PATH);
+		AirBubblePowerUp airBubblePowerUp = airBubblePowerUpScene.Instantiate<AirBubblePowerUp>();
+		AddChild(airBubblePowerUp);
+		return airBubblePowerUp;
 	}
 
 	#endregion
@@ -453,7 +472,8 @@ public enum ObstacleType
 {
 	Mine,
 	HealthPowerUp,
-	MaxHealthPowerUp
+	MaxHealthPowerUp,
+	AirBubblePowerUp
 }
 
 public enum SpawnType
