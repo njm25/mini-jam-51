@@ -10,6 +10,7 @@ public partial class GameManager : Node2D
 	private Camera _camera;
 	public MenuManager _menuManager;
 	public ObstacleManager _obstacleManager;
+	private WorldLines _worldLines;
 	const string PLAYER_PATH = "res://nodes/Player/Player.tscn";
 	const string CAMERA_PATH = "res://nodes/Camera/Camera.tscn";
 
@@ -79,6 +80,23 @@ public partial class GameManager : Node2D
 			_obstacleManager.QueueFree();
 			_obstacleManager = null;
 		}
+	}
+
+	private void LoadWorldLines()
+	{
+		_worldLines = new WorldLines();
+		_worldLines.ZIndex = -10;
+		_worldLines._player = _player;
+		AddChild(_worldLines);
+	}
+
+	private void UnloadWorldLines()
+	{
+		if (_worldLines != null)
+		{
+			_worldLines.QueueFree();
+			_worldLines = null;
+		}
 	}	
 
 	#endregion
@@ -93,6 +111,7 @@ public partial class GameManager : Node2D
 
 		UnloadCamera();
 		UnloadPlayer();
+		UnloadWorldLines();
 		UnloadObstacleManager();
 	}
 
@@ -103,6 +122,7 @@ public partial class GameManager : Node2D
 		
 		LoadPlayer();
 		LoadCamera();
+		LoadWorldLines();
 		LoadObstacleManager();
 	}
 

@@ -177,9 +177,6 @@ public partial class Player : CharacterBody2D
 		Label damageLabel = new Label();
 		damageLabel.Text = "-1 Health";
 		damageLabel.AddThemeColorOverride("font_color", Colors.Black);
-		var font = GD.Load<Font>("res://assets/mspain.ttf");
-		if (font != null)
-			damageLabel.AddThemeFontOverride("font", font);
 		damageLabel.Position = new Vector2(Position.X + 20, Position.Y - 20);
 		GetParent().AddChild(damageLabel);
 

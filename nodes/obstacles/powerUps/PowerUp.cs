@@ -6,6 +6,7 @@ public partial class PowerUp : Obstacle
 
 	public override void _Ready()
 	{
+		DESTROY_SOUND_PATH = "";
 		base._Ready();
 		DoesDamage = false;
 		BypassIFrame = true;
@@ -13,7 +14,7 @@ public partial class PowerUp : Obstacle
 	}
 
 
-	protected override void Destroy()
+	protected override void Destroy(bool playSound = true)
 	{
 		Label destroyLabel = new Label();
 		destroyLabel.Text = DestroyLabelText;
@@ -34,7 +35,7 @@ public partial class PowerUp : Obstacle
 		destroyLabel.AddChild(labelTimer);
 		labelTimer.Start();
 
-		base.Destroy();
+		base.Destroy(playSound);
 	}
 
 }

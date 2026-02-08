@@ -21,6 +21,7 @@ public partial class Obstacle : RigidBody2D
 	public ObstacleManager _obstacleManager;
 	private Timer _destroyTimer;
 	private float _bobTime = 0f;
+	public string DESTROY_SOUND_PATH = "res://assets/explosion.wav";
 
 	public override void _Ready()
 	{
@@ -34,7 +35,7 @@ public partial class Obstacle : RigidBody2D
 		_destroyTimer = new Timer();
 		_destroyTimer.WaitTime = 10f;
 		_destroyTimer.OneShot = true;
-		_destroyTimer.Timeout += Destroy;
+		_destroyTimer.Timeout += () => Destroy(playSound: false);
 		AddChild(_destroyTimer);
 		_destroyTimer.Start();
 	}
@@ -69,7 +70,7 @@ public partial class Obstacle : RigidBody2D
 	public void Act()
 	{   
 		Interact();
-		Destroy();
+		Destroy(playSound: true);
 	}
 
 	public virtual void Interact()
@@ -81,10 +82,19 @@ public partial class Obstacle : RigidBody2D
 		}
 	}
 
-	protected virtual void Destroy()
+	protected virtual void Destroy(bool playSound = true)
 	{
 		if (_obstacleManager._obstacles.Contains(this))
 			_obstacleManager._obstacles.Remove(this);
+		if (playSound && DESTROY_SOUND_PATH != "")
+		{
+			AudioStreamPlayer2D destroySoundPlayer = new AudioStreamPlayer2D();
+			GetTree().Root.AddChild(destroySoundPlayer);
+			destroySoundPlayer.Stream = GD.Load<AudioStream>(DESTROY_SOUND_PATH);
+			destroySoundPlayer.GlobalPosition = GlobalPosition;
+			destroySoundPlayer.Play();
+			destroySoundPlayer.Finished += () => destroySoundPlayer.QueueFree();
+		}
 		QueueFree();
 	}
 

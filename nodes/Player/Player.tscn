@@ -1,8 +1,9 @@
-[gd_scene load_steps=6 format=3 uid="uid://b0wx8uq63i7il"]
+[gd_scene load_steps=7 format=3 uid="uid://b0wx8uq63i7il"]
 
 [ext_resource type="Script" uid="uid://6k0itdj8fyrb" path="res://nodes/Player/Player.cs" id="1_osw0o"]
 [ext_resource type="SpriteFrames" uid="uid://bkcucndnbuytb" path="res://assets/swimming.gif" id="2_riwpy"]
 [ext_resource type="SpriteFrames" uid="uid://blsnkf87ncm4i" path="res://assets/iframe.gif" id="3_mj6xb"]
+[ext_resource type="AudioStream" uid="uid://cmc1bxw7ue24s" path="res://assets/breathing.wav" id="4_k3tdu"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_riwpy"]
 size = Vector2(7, 4.5)
@@ -38,3 +39,6 @@ shape = SubResource("RectangleShape2D_riwpy")
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
 position = Vector2(0, -7)
 shape = SubResource("CapsuleShape2D_mj6xb")
+
+[node name="BreathingSound" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("4_k3tdu")
