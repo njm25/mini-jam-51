@@ -7,3 +7,4 @@
 script = ExtResource("1_glv2v")
 
 [node name="Ground" parent="." instance=ExtResource("2_uu6xs")]
+position = Vector2(-9, 0)

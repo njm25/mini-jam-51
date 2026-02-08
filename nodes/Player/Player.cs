@@ -18,11 +18,16 @@ public partial class Player : CharacterBody2D
 	public int Health { get; set; } = 3;
 	[Export]
 	public int MaxHealth { get; set; } = 3;
-	private GameManager _gameManager;
+	[Export]
+	public bool IsInvincible { get; set; } = false;
+	[Export]
+	public float IFrameDuration { get; set; } = 2f;
+	public GameManager _gameManager;
 	private CollisionShape2D _collisionShape;
 	private Area2D _area2D;
 	private PlayerHud _hud;
 	public Stopwatch _scoreStopwatch = new Stopwatch();
+	private Timer _iFrameTimer;
 	public int Score => (int)(_scoreStopwatch.Elapsed.TotalSeconds / 3);
 	private const string HUD_PATH = "res://nodes/Player/PlayerHud/PlayerHud.tscn";
 
@@ -36,6 +41,12 @@ public partial class Player : CharacterBody2D
 		_area2D = GetNode<Area2D>("Area2D");
 		_area2D.BodyEntered += BodyEntered;
 		_scoreStopwatch.Start();
+		Position = new Vector2(20, 0);
+		_iFrameTimer = new Timer();
+		AddChild(_iFrameTimer);
+		_iFrameTimer.OneShot = true;
+		_iFrameTimer.WaitTime = IFrameDuration;
+		_iFrameTimer.Timeout += () => IFrameOver();
 		LoadHud();
 	}
 	
@@ -84,8 +95,33 @@ public partial class Player : CharacterBody2D
 		if (body.IsInGroup("Obstacles"))
 		{
 			Obstacle obstacle = body as Obstacle;
+			if (IsInvincible && !obstacle.BypassIFrame) return;
+
 			_gameManager._obstacleManager.ActObstacle(obstacle);
 		}
+	}
+
+	public void TakeDamage()
+	{
+		if (IsInvincible) return;
+		Health--;
+		if (Health <= 0)
+		{
+			KillPlayer();
+		}
+		else
+		{
+			IsInvincible = true;
+			_iFrameTimer.Start();
+			Modulate = new Color(1, 1, 1, 0.5f); 
+		}
+	}
+
+	private void IFrameOver()
+	{
+		IsInvincible = false;
+		Modulate = new Color(1, 1, 1, 1); 
+
 	}
 
 	public void KillPlayer()
