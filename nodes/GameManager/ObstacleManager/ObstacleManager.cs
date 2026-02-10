@@ -104,7 +104,7 @@ public partial class ObstacleManager : Node
 		_spawnTimer = new Timer();
 		_spawnTimer.Timeout += OnSpawnTimerTimeout;
 		_spawnTimer.WaitTime = SpawnInterval;
-		_spawnTimer.Autostart = true;
+		_spawnTimer.Autostart = false;
 		AddChild(_spawnTimer);
 	}
 
@@ -113,7 +113,7 @@ public partial class ObstacleManager : Node
 		_modeSwitchTimer = new Timer();
 		_modeSwitchTimer.Timeout += OnModeSwitchTimeout;
 		_modeSwitchTimer.WaitTime = ModeSwitchInterval;
-		_modeSwitchTimer.Autostart = true;
+		_modeSwitchTimer.Autostart = false;
 		_modeSwitchTimer.OneShot = false;
 		AddChild(_modeSwitchTimer);
 	}
@@ -492,6 +492,27 @@ public partial class ObstacleManager : Node
 			obstacle.QueueFree();
 		_obstacles.Clear();
 		ResetMode();
+	}
+
+	/// <summary>
+	/// Start obstacle spawning. Called after the intro music finishes.
+	/// </summary>
+	public void BeginSpawning()
+	{
+		_spawnTimer.Start();
+		_modeSwitchTimer.Start();
+	}
+
+	/// <summary>
+	/// Spawns a speaker battery power-up with 100 charge at the right edge, at the player's Y position.
+	/// </summary>
+	public void SpawnIntroBattery()
+	{
+		var battery = SpawnObstacleAtPosition(ObstacleType.SpeakerBatteryPowerUp, new Vector2(SpawnX, _gameManager._player.Position.Y));
+		if (battery is SpeakerBatteryPowerUp speakerBattery)
+		{
+			speakerBattery.SpeakerChargeAmount = 100f;
+		}
 	}
 
 	public void ActObstacle(Obstacle obstacle)

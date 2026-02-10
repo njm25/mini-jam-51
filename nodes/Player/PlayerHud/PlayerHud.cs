@@ -18,14 +18,22 @@ public partial class PlayerHud : Node
 	// Air bar
 	private Label _airLabel;
 	private ColorRect _airBarBg;
+	private ColorRect _airBarDanger;
 	private ColorRect _airBarFill;
 	private Sprite2D _airBarBorder;
 
 	// Battery bar
 	private Label _batteryLabel;
 	private ColorRect _batteryBarBg;
+	private ColorRect _batteryBarDanger;
 	private ColorRect _batteryBarFill;
 	private Sprite2D _batteryBarBorder;
+
+	// Flash state
+	private float _flashTime = 0f;
+	private const float FLASH_SPEED = 8f;
+	private const float DANGER_FADE_SPEED = 5f;
+	private float _batteryDangerFade = 0f;
 
 	// Labels
 	private Label _healthLabel;
@@ -88,6 +96,12 @@ public partial class PlayerHud : Node
 		_airBarBg.Size = new Vector2(BAR_WIDTH, BAR_HEIGHT);
 		AddChild(_airBarBg);
 
+		_airBarDanger = new ColorRect();
+		_airBarDanger.Color = new Color(1f, 0f, 0f, 0f);
+		_airBarDanger.Position = new Vector2(MARGIN_X, currentY);
+		_airBarDanger.Size = new Vector2(BAR_WIDTH, BAR_HEIGHT);
+		AddChild(_airBarDanger);
+
 		_airBarFill = new ColorRect();
 		_airBarFill.Color = new Color(0.4f, 0.75f, 1f, 0.85f); // light blue
 		_airBarFill.Position = new Vector2(MARGIN_X, currentY);
@@ -113,6 +127,12 @@ public partial class PlayerHud : Node
 		_batteryBarBg.Position = new Vector2(MARGIN_X, currentY);
 		_batteryBarBg.Size = new Vector2(BAR_WIDTH, BAR_HEIGHT);
 		AddChild(_batteryBarBg);
+
+		_batteryBarDanger = new ColorRect();
+		_batteryBarDanger.Color = new Color(1f, 0f, 0f, 0f);
+		_batteryBarDanger.Position = new Vector2(MARGIN_X, currentY);
+		_batteryBarDanger.Size = new Vector2(BAR_WIDTH, BAR_HEIGHT);
+		AddChild(_batteryBarDanger);
 
 		_batteryBarFill = new ColorRect();
 		_batteryBarFill.Color = new Color(0.4f, 0.9f, 0.4f, 0.85f); // light green
@@ -153,13 +173,26 @@ public partial class PlayerHud : Node
 		var labelSize = _scoreLabel.GetMinimumSize();
 		_scoreLabel.Position = new Vector2((viewportSize.X - labelSize.X) / 2f, MARGIN_Y);
 
+		// Flash timer
+		_flashTime += (float)delta;
+		float flashAlpha = (Mathf.Sin(_flashTime * FLASH_SPEED) + 1f) / 2f * 0.85f;
+
 		// Update air bar fill
 		float airRatio = Mathf.Clamp(_player.AirLevel / _player.MaxAir, 0f, 1f);
 		_airBarFill.Size = new Vector2(BAR_WIDTH * airRatio, BAR_HEIGHT);
 
+		// Air danger flash — always flash when empty
+		bool airEmpty = _player.AirLevel <= 0f;
+		_airBarDanger.Color = new Color(1f, 0f, 0f, airEmpty ? flashAlpha : 0f);
+
 		// Update battery bar fill
 		float batteryRatio = Mathf.Clamp(_player.SpeakerCharge / _player.MaxSpeakerCharge, 0f, 1f);
 		_batteryBarFill.Size = new Vector2(BAR_WIDTH * batteryRatio, BAR_HEIGHT);
+
+		// Battery danger flash — fade in/out when trying to use speaker while empty
+		bool batteryDanger = _player.SpeakerCharge <= 0f && Input.IsActionPressed("use");
+		_batteryDangerFade = Mathf.MoveToward(_batteryDangerFade, batteryDanger ? 1f : 0f, DANGER_FADE_SPEED * (float)delta);
+		_batteryBarDanger.Color = new Color(1f, 0f, 0f, flashAlpha * _batteryDangerFade);
 	}
 
 	private void RebuildHearts()

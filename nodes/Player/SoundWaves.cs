@@ -20,7 +20,7 @@ public partial class SoundWaves : Node2D
 		base._Process(delta);
 
 		var player = GetParent<Player>();
-		bool shouldBeActive = player.IsUsingSpeaker;
+		bool shouldBeActive = player.IsUsingSpeaker && !player.IsPaused;
 
 		if (shouldBeActive && !_active)
 		{

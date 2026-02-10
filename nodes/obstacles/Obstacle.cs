@@ -72,6 +72,12 @@ public partial class Obstacle : RigidBody2D
 			if (LinearVelocity.Y < 0)
 				LinearVelocity = new Vector2(LinearVelocity.X, 0);
 		}
+		if (Position.Y > 0)
+		{
+			Position = new Vector2(Position.X, 0);
+			if (LinearVelocity.Y > 0)
+				LinearVelocity = new Vector2(LinearVelocity.X, 0);
+		}
 	}
 
 	public void Pause()

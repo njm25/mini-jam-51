@@ -35,11 +35,14 @@ public partial class Player : CharacterBody2D
 	[Export]
 	public float BreathableOffset { get; set; } = 25f;
 	[Export]
-	public float SpeakerCharge { get; set; } = 100;
+	public float SpeakerCharge { get; set; } = 0;
 	[Export]
 	public float MaxSpeakerCharge { get; set; } = 100;
 	[Export]
 	public float SpeakerChargeDepletionRate { get; set; } = 20f;
+	[Export]
+	public float SpeakerFadeSpeed { get; set; } = 5f;
+	public float SpeakerFade { get; private set; } = 0f;
 	public bool IsUsingSpeaker => Input.IsActionPressed("use") && SpeakerCharge > 0;
 	public float _waterLineY => -(GetViewportRect().Size.Y - WaterLineOffset);
 	public GameManager _gameManager;
@@ -53,6 +56,7 @@ public partial class Player : CharacterBody2D
 	private AudioStreamPlayer _breathingPlayer;
 	private AudioStreamPlayer _splashPlayer;
 	private AudioStreamPlayer _musicPlayer;
+	private AudioStreamPlayer _baselinePlayer;
 	private AudioStream _runningLoop;
 	private SoundWaves _soundWaves;
 	private bool _wasUnderwater = true;
@@ -89,6 +93,7 @@ public partial class Player : CharacterBody2D
 		_splashPlayer.MaxPolyphony = 3;
 		AddChild(_splashPlayer);
 		LoadMusic();
+		LoadBaseline();
 		LoadHud();
 		ShowTutorialLabels();
 		_soundWaves = new SoundWaves();
@@ -142,6 +147,16 @@ public partial class Player : CharacterBody2D
 			{
 				SpeakerCharge = 0;
 			}
+		}
+
+		// Smooth fade for speaker usage
+		float fadeTarget = IsUsingSpeaker ? 1f : 0f;
+		SpeakerFade = Mathf.MoveToward(SpeakerFade, fadeTarget, SpeakerFadeSpeed * (float)delta);
+
+		// baseline volume follows fade
+		if (_baselinePlayer != null)
+		{
+			_baselinePlayer.VolumeDb = Mathf.Lerp(-80f, 0f, SpeakerFade);
 		}
 
 		// Air management
@@ -264,6 +279,22 @@ public partial class Player : CharacterBody2D
 		_musicPlayer.Stream = _runningLoop;
 		_musicPlayer.Finished += () => _musicPlayer.Play();
 		_musicPlayer.Play();
+
+		// Start baseline in sync with the looped track
+		_baselinePlayer.Play();
+
+		// Spawn a full-charge battery and start obstacle spawning
+		_gameManager._obstacleManager.SpawnIntroBattery();
+		_gameManager._obstacleManager.BeginSpawning();
+	}
+
+	private void LoadBaseline()
+	{
+		_baselinePlayer = new AudioStreamPlayer();
+		_baselinePlayer.Stream = GD.Load<AudioStream>("res://assets/baseline.wav");
+		_baselinePlayer.VolumeDb = -100f;
+		_baselinePlayer.Finished += () => _baselinePlayer.Play();
+		AddChild(_baselinePlayer);
 	}
 
 	public void SetMusicMuted(bool muted)
