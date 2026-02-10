@@ -7,8 +7,7 @@ public partial class WorldLines : Node2D
 
 	private const float SCROLL_SPEED = 200f;
 
-	// Repeating pixel pattern: Y offsets to create a subtle pixelated wave.
-	// 0 = baseline, -1 = one pixel up, 1 = one pixel down.
+	// Repeating pixel pattern for the ground line.
 	private static readonly int[] PATTERN = {
 		0, 0, 0, 0, -1, -1, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0
 	};
@@ -47,9 +46,7 @@ public partial class WorldLines : Node2D
 			DrawRect(new Rect2(left, groundY, right - left, bottom - groundY), Colors.White);
 		}
 
-		// Draw scrolling pixelated lines
-		float waterLineY = _player._waterLineY;
-		DrawPixelLine(left, right, waterLineY);
+		// Draw only the ground line (water line is handled by WaterLine node)
 		DrawPixelLine(left, right, groundY);
 	}
 
@@ -59,7 +56,6 @@ public partial class WorldLines : Node2D
 
 		for (float x = left; x <= right; x += 1f)
 		{
-			// Shift pattern index by scroll offset to create movement
 			int idx = ((int)(x + _scrollOffset) % patternLen + patternLen) % patternLen;
 			float y = baseY + PATTERN[idx];
 			DrawRect(new Rect2(x, y, 1f, 1f), Colors.Black);

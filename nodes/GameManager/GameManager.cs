@@ -11,6 +11,7 @@ public partial class GameManager : Node2D
 	public MenuManager _menuManager;
 	public ObstacleManager _obstacleManager;
 	private WorldLines _worldLines;
+	private WaterLine _waterLine;
 	const string PLAYER_PATH = "res://nodes/Player/Player.tscn";
 	const string CAMERA_PATH = "res://nodes/Camera/Camera.tscn";
 
@@ -97,7 +98,24 @@ public partial class GameManager : Node2D
 			_worldLines.QueueFree();
 			_worldLines = null;
 		}
-	}	
+	}
+
+	private void LoadWaterLine()
+	{
+		_waterLine = new WaterLine();
+		_waterLine.ZIndex = 10;
+		_waterLine._player = _player;
+		AddChild(_waterLine);
+	}
+
+	private void UnloadWaterLine()
+	{
+		if (_waterLine != null)
+		{
+			_waterLine.QueueFree();
+			_waterLine = null;
+		}
+	}
 
 	#endregion
 
@@ -118,6 +136,7 @@ public partial class GameManager : Node2D
 		UnloadCamera();
 		UnloadPlayer();
 		UnloadWorldLines();
+		UnloadWaterLine();
 		UnloadObstacleManager();
 	}
 
@@ -129,6 +148,7 @@ public partial class GameManager : Node2D
 		LoadPlayer();
 		LoadCamera();
 		LoadWorldLines();
+		LoadWaterLine();
 		LoadObstacleManager();
 	}
 
